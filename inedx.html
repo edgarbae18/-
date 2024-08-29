@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>재산 증식 전략 테스트</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .question {
+            margin-bottom: 30px;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .answer-button {
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        .answer-button:hover {
+            background-color: #2980b9;
+        }
+        .answer-button.selected {
+            background-color: #2ecc71;
+        }
+        #result {
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+        }
+        #return-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #return-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>재산 증식 전략 테스트</h1>
+        <div id="test-content"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "투자할 때 당신의 위험 선호도는 어떠신가요?",
+            "수입을 늘리기 위해 어떤 방법을 선호하시나요?",
+            "재정 관리에 있어서 당신의 스타일은 어떠신가요?",
+            "장기적인 재산 증식에 대한 당신의 접근 방식은?"
+        ];
+        const options = [
+            ['안전 추구', '균형 유지', '위험 감수', '고위험 고수익'],
+            ['현재 직업 집중', '부업 시도', '사업 시작', '투자 다각화'],
+            ['엄격한 예산', '유연한 지출', '자동 저축', '수입 증대 집중'],
+            ['안정적 저축', '부동산 투자', '주식 시장 활용', '다양한 자산 분산']
+        ];
+        const strategyDescriptions = [
+            ["보수적", "균형적", "공격적", "혁신적"],
+            ["전문성 강화", "다각화", "기업가적", "포트폴리오"],
+            ["절약 중심", "유연한", "시스템적", "성장 지향적"],
+            ["안정 지향", "실물 자산", "시장 중심", "다각화"]
+        ];
+        let selectedAnswers = new Array(questions.length).fill(null);
+
+        function createTestContent() {
+            const testContent = document.getElementById('test-content');
+            testContent.innerHTML = questions.map((question, index) => `
+                <div class="question">
+                    <div class="question-text">${index + 1}. ${question}</div>
+                    <div class="answer-grid">
+                        ${options[index].map((option, optionIndex) => `
+                            <button class="answer-button" onclick="selectAnswer(${index}, ${optionIndex})">
+                                ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, answerIndex) {
+            selectedAnswers[questionIndex] = answerIndex;
+            updateButtonStyles();
+            checkAndShowResult();
+        }
+
+        function updateButtonStyles() {
+            const buttons = document.getElementsByClassName('answer-button');
+            Array.from(buttons).forEach((button, index) => {
+                const questionIndex = Math.floor(index / 4);
+                const answerIndex = index % 4;
+                button.classList.toggle('selected', selectedAnswers[questionIndex] === answerIndex);
+            });
+        }
+
+        function checkAndShowResult() {
+            if (selectedAnswers.every(answer => answer !== null)) {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const strategies = selectedAnswers.map((answer, index) => strategyDescriptions[index][answer]);
+            const personalStrategy = generatePersonalStrategy(strategies);
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>당신의 재산 증식 전략 분석</h2>
+                <p>${personalStrategy}</p>
+                <button id="return-button" onclick="resetTest()">다시 하기</button>
+            `;
+            resultDiv.style.display = 'block';
+
+            const buttons = document.getElementsByClassName('answer-button');
+            Array.from(buttons).forEach(button => button.disabled = true);
+        }
+
+        function generatePersonalStrategy(strategies) {
+            const introductions = [
+                "당신의 재산 증식 전략은 다음과 같습니다:",
+                "당신에게 적합한 자산 구축 접근 방식은:",
+                "재정적 성공을 위한 당신만의 로드맵:",
+                "부자가 되기 위한 당신의 개인화된 전략:"
+            ];
+            const conclusions = [
+                "이러한 접근 방식은 당신의 재정 목표 달성에 도움이 될 것입니다.",
+                "이 전략을 따르면 장기적으로 안정적인 자산 증식이 가능할 것입니다.",
+                "당신의 독특한 접근 방식은 재정적 자유를 향한 길을 열어줄 것입니다.",
+                "이 전략을 실행하면서 지속적으로 학습하고 조정해 나가세요."
+            ];
+
+            const intro = introductions[Math.floor(Math.random() * introductions.length)];
+            const conclusion = conclusions[Math.floor(Math.random() * conclusions.length)];
+
+            return `${intro}
+                    1. 투자 전략: ${strategies[0]} 접근 방식으로 자산을 관리하세요.
+                    2. 수입 증대: ${strategies[1]} 전략을 통해 수입원을 다각화하세요.
+                    3. 재정 관리: ${strategies[2]} 방식으로 자금을 효율적으로 관리하세요.
+                    4. 장기 계획: ${strategies[3]} 전략으로 지속 가능한 성장을 추구하세요.
+                    ${conclusion}`;
+        }
+
+        function resetTest() {
+            selectedAnswers = new Array(questions.length).fill(null);
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            resultDiv.innerHTML = '';
+            createTestContent();
+        }
+
+        createTestContent();
+    </script>
+</body>
+</html>
